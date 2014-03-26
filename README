@@ -1,0 +1,21 @@
+About
+----------
+pcap-tools is a collection of command line tools for working with .pcap
+files.
+
+Building
+---------
+Prerequisites:
+    * pcap development files
+
+If checked out from source code control, first run
+
+    autoreconf -fi
+
+Then run
+    ./configure
+    make
+    make install
+
+
+
