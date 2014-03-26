@@ -18,13 +18,13 @@ static void usage(const char *progname)
 static void dump_hex(const unsigned char *data, u_int len)
 {
     u_int i;
-    for(i = 1; i <= len; i++) {
+    for (i = 1; i <= len; i++) {
         printf("%02X ", data[i - 1]);
-        if(i % 20 == 0)
+        if (i % 20 == 0)
             putchar('\n');
     }
 
-    if(i % 20 != 0)
+    if (i % 20 != 0)
         putchar('\n');
    putchar('\n');
 
@@ -36,7 +36,7 @@ static void pcap_info(const char *file)
     pcap_t *pcap;
 
     pcap = pcap_open_offline(file, errbuf);
-    if(pcap == NULL) {
+    if (pcap == NULL) {
         printf("Error opening %s: %s\n", file, errbuf);
         return;
     }
@@ -49,13 +49,13 @@ static void pcap_info(const char *file)
             pcap_datalink(pcap));
             
 
-    if(count_packets || print_hex) {
+    if (count_packets || print_hex) {
         unsigned int count = 0;
         struct pcap_pkthdr hdr; 
         const unsigned char *packet;
 
-        while((packet = pcap_next(pcap, &hdr)) != NULL) {
-            if(print_hex) {
+        while ((packet = pcap_next(pcap, &hdr)) != NULL) {
+            if (print_hex) {
                 printf("packet %u\n", count);
                 dump_hex(packet, hdr.len);
             }
@@ -74,8 +74,8 @@ int main(int argc, char *argv[])
 {
     int c;
 
-    while((c = getopt(argc, argv, "cph")) != -1) {
-        switch(c) {
+    while ((c = getopt(argc, argv, "cph")) != -1) {
+        switch (c) {
 
             case 'c':
                 count_packets = 1;
@@ -96,7 +96,12 @@ int main(int argc, char *argv[])
         }
     }
 
-    while(optind < argc) {
+    if (optind == argc) {
+        usage(argv[0]);
+        return 1;
+    }
+
+    while (optind < argc) {
         pcap_info(argv[optind]);
         optind++;
     }
