@@ -13,16 +13,27 @@
 /* Small utility to show info and dump the hex content of 
  * pcap files */
 
-static int count_packets;
 #define USAGE_MAX_DLT 1024
 #define PCAP_MAGIC_NUMBER 0xA1B2C3D4
+#define PCAP_THISZONE_OFFSET 8
+#define PCAP_SIGFIGS_OFFSET 12
+#define PCAP_SNAPLEN_OFFSET 16
 #define PCAP_LINKTYPE_OFFSET 20
+
+#define FLAG_THISZONE ( 1 << 0)
+#define FLAG_SIGFIGS  ( 1 << 1)
+#define FLAG_SNAPLEN  ( 1 << 2)
+#define FLAG_LINKTYPE ( 1 << 3)
+
 static void usage(const char *progname)
 {
     int i;
-    printf("Usage: %s [-h] -l type file1.pcap file2.pcap ...\n", progname);
-    puts("\tChange the pcap linktype of the .pcap files\n");
+    printf("Usage: %s [-h] [-l type] [-z zone] [-f sigfigs] [-s snaplen] file1.pcap ...\n", progname);
+    puts("\tChange values in the  pcap header of the .pcap files\n");
     puts("\t-l type the link type to set (decimal value)");
+    puts("\t-z timezone the timezone value to set (decimal value)");
+    puts("\t-f sigfigs the sigfigs value to set (decimal value)");
+    puts("\t-s snaplen the snaplen to set (decimal value)");
     puts("\nKnown linktypes are:");
 
     for (i = 0; i < USAGE_MAX_DLT; i++) {
@@ -74,49 +85,55 @@ static int open_pcap(const char *file, int *other_endian)
     return fd;
 }
 
-static void change_linktype(const char *file, uint32_t new_linktype)
+static int change_32bit(int fd, uint32_t new_val, off_t offset, int other_endian)
 {
-    int fd;
-    uint32_t linktype;
-    int other_endian;
+    uint32_t val;
 
-    if ((fd = open_pcap(file, &other_endian)) == -1) {
-        return;
-    }
-   
     //swap it if the endian doesn't match
-    linktype = other_endian ? new_linktype : reverse(new_linktype);
+    val = other_endian ? new_val : reverse(new_val);
     
     if (lseek(fd, PCAP_LINKTYPE_OFFSET, SEEK_SET) != PCAP_LINKTYPE_OFFSET) {
         perror("Cannot seek to linktype offset");
-        close(fd);
+        return -1;
     }
 
-    if (write(fd, &linktype, sizeof new_linktype) != sizeof new_linktype) {
-        perror("Writing new linktype failed");
-        close(fd);
-        return;
+    if (write(fd, &val, sizeof val) != sizeof val) {
+        perror("Writing new value failed");
+        return -1;
     }
 
     fsync(fd);
-    close(fd);
 
-    printf("Changed linktype on %s to %u\n", file, (unsigned) new_linktype);
+    return 0;
 }
 
 int main(int argc, char *argv[])
 {
     int c;
-    uint32_t new_linktype;
-    int got_linktype = 0;
+    uint32_t new_linktype = 0;
+    uint32_t new_zone = 0;
+    uint32_t new_sigfigs = 0;
+    uint32_t new_snaplen = 0;
+    int flags = 0;
 
-    while ((c = getopt(argc, argv, "l:h")) != -1) {
+    while ((c = getopt(argc, argv, "l:z:f:s:h")) != -1) {
         switch (c) {
 
             case 'l':
-                count_packets = 1;
-                got_linktype = 1;
                 new_linktype = atoi(optarg);
+                flags |= FLAG_LINKTYPE;
+                break;
+            case 'z':
+                new_zone = atoi(optarg);
+                flags |= FLAG_THISZONE;
+                break;
+            case 'f':
+                new_sigfigs = atoi(optarg);
+                flags |= FLAG_SIGFIGS;
+                break;
+            case 's':
+                new_snaplen = atoi(optarg);
+                flags |= FLAG_SNAPLEN;
                 break;
 
             default: //fallthru
@@ -133,14 +150,33 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    if (!got_linktype) {
-        puts("Missing -l linktype");
+    if (!flags) {
+        puts("Nothing to change");
         usage(argv[0]);
         return 1;
     }
 
     while (optind < argc) {
-        change_linktype(argv[optind], new_linktype);
+        int fd;
+        int other_endian;
+
+        fd = open_pcap(argv[optind], &other_endian);
+        if (fd >= 0) {
+            if (flags & FLAG_LINKTYPE) {
+                change_32bit(fd, new_linktype, PCAP_LINKTYPE_OFFSET, other_endian);
+            }
+            if (flags & FLAG_THISZONE) {
+                change_32bit(fd, new_zone, PCAP_THISZONE_OFFSET, other_endian);
+            }
+            if (flags & FLAG_SIGFIGS) {
+                change_32bit(fd, new_sigfigs, PCAP_SIGFIGS_OFFSET, other_endian);
+            }
+            if (flags & FLAG_SNAPLEN) {
+                change_32bit(fd, new_snaplen, PCAP_SNAPLEN_OFFSET, other_endian);
+            }
+
+            close(fd);
+        }
         optind++;
     }
 
