@@ -47,7 +47,6 @@ static void pcap_info(const char *file)
             pcap_minor_version(pcap),
             pcap_datalink_val_to_name(pcap_datalink(pcap)),
             pcap_datalink(pcap));
-            
 
     if (count_packets || print_hex) {
         unsigned int count = 0;
