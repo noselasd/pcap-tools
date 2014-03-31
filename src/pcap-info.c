@@ -9,7 +9,7 @@ static int print_hex;
 
 static void usage(const char *progname)
 {
-    printf("Usage: %s [-hcp] file1.pcap file2.pcap ...", progname);
+    printf("Usage: %s [-hcp] file1.pcap file2.pcap ...\n", progname);
     puts("\t-c count the number of packets");
     puts("\t-p print a hex dump of each packet");
     puts("\t-h this help");
