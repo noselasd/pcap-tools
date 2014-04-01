@@ -30,7 +30,7 @@ static void usage(const char *progname)
     int i;
     printf("Usage: %s [-h] [-l type] [-z zone] [-f sigfigs] [-s snaplen] file1.pcap ...\n", progname);
     puts("\tChange values in the  pcap header of the .pcap files\n");
-    puts("\t-l type the link type to set (decimal value)");
+    puts("\t-l type the linktype to set (decimal value)");
     puts("\t-z timezone the timezone value to set (decimal value)");
     puts("\t-f sigfigs the sigfigs value to set (decimal value)");
     puts("\t-s snaplen the snaplen to set (decimal value)");
@@ -50,9 +50,9 @@ static uint32_t reverse(uint32_t val)
     uint32_t x;
 
     x =  (val & 0xff000000) >> 24;
-    x |= (val & 0x00ff0000) >> 16;
-    x |= (val & 0x0000ff00) >> 8;
-    x |= (val & 0x000000ff);
+    x |= (val & 0x00ff0000) >> 8;
+    x |= (val & 0x0000ff00) << 8;
+    x |= (val & 0x000000ff) << 24;
 
     return x;
 }
