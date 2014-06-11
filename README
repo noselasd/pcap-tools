@@ -3,10 +3,20 @@ About
 pcap-tools is a collection of command line tools for working with .pcap
 files.
 
+Tools
+---------
+The following tools are provided:
+
+pcap-dump: Prints out a hex dump of packets in pcap files
+           Prints out misc other info of a pcap file
+
+pcap-changehdr: Change the file header fields of a .pcap file
+                Print out the file header fields of a .pcap file
+
 Building
 ---------
 Prerequisites:
-    * pcap development files
+    * libpcap development files
 
 If checked out from source code control, first run
 
