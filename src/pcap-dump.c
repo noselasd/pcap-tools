@@ -14,6 +14,7 @@ static void usage(const char *progname)
     puts("\t-c count the number of packets");
     puts("\t-p print a hex dump of each packet");
     puts("\t-h this help");
+    printf("\t%s version %s using %s\n", progname, PACKAGE_VERSION, pcap_lib_version());
 }
 
 static void dump_hex(const unsigned char *data, u_int len)
