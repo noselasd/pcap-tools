@@ -109,6 +109,7 @@ const struct {
 static void show_linktypes(void)
 {
     int i;
+    puts("\nKnown linktypes are:");
     for (i = 0; i < USAGE_MAX_DLT; i++) {
         const char *name = pcap_datalink_val_to_name(i);
         const char *desc = pcap_datalink_val_to_description(i);
@@ -132,7 +133,6 @@ static void usage(const char *progname)
     puts("\t-I          show the pcap header fields");
     puts("\t-L          show the known values for 'linktype'");
     printf("\t%s version %s using %s\n", progname, PACKAGE_VERSION, pcap_lib_version());
-    puts("\nKnown linktypes are:");
 
 }
 
