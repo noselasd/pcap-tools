@@ -42,7 +42,7 @@ static void pcap_info(const char *file)
         return;
     }
 
-    printf("%s : version_major %u version_minor %u link_type %s (%d decimal)\n", 
+    printf("%s : pcap version_major %u pcap version_minor %u link_type %s (%d decimal)\n", 
             file, 
             pcap_major_version(pcap),
             pcap_minor_version(pcap),
@@ -63,8 +63,9 @@ static void pcap_info(const char *file)
             count++;
         }
 
-        printf("Total packets: %u\n", count);
-
+        if (count_packets) {
+            printf("Total packets: %u\n", count);
+        }
     }
 
     pcap_close(pcap);
