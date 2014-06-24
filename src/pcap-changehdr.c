@@ -119,23 +119,6 @@ static void show_linktypes(void)
     }
 }
 
-static void usage(const char *progname)
-{
-    printf("Usage: %s [-h] options..  file1.pcap ...\n", progname);
-    puts("\tChange values in the  pcap header of .pcap files\n");
-    puts("\t The following arguments can be used:");
-    puts("\t-l type     change the linktype (decimal value)");
-    puts("\t-z timezone change the timezone value (decimal value)");
-    puts("\t-f sigfigs  change the sigfigs value (decimal value)");
-    puts("\t-s snaplen  change the snaplen (decimal value)");
-    puts("\t-M version  change the major version to set (decimal value)");
-    puts("\t-m version  change the minor version to set (decimal value)");
-    puts("\t-I          show the pcap header fields");
-    puts("\t-L          show the known values for 'linktype'");
-    printf("\t%s version %s using %s\n", progname, PACKAGE_VERSION, pcap_lib_version());
-
-}
-
 static uint16_t reverse16(uint16_t val)
 {
     uint16_t x;
@@ -294,6 +277,22 @@ static void show_header(int fd, int other_endian)
     }
 }
 
+static void usage(const char *progname)
+{
+    printf("Usage: %s [-h] options..  file1.pcap ...\n", progname);
+    puts("\tChange values in the  pcap header of .pcap files\n");
+    puts("\t The following arguments can be used:");
+    puts("\t-l type     change the linktype (decimal value)");
+    puts("\t-z timezone change the timezone value (decimal value)");
+    puts("\t-f sigfigs  change the sigfigs value (decimal value)");
+    puts("\t-s snaplen  change the snaplen (decimal value)");
+    puts("\t-M version  change the major version to set (decimal value)");
+    puts("\t-m version  change the minor version to set (decimal value)");
+    puts("\t-I          show the pcap header fields");
+    puts("\t-L          show the known values for 'linktype'");
+    printf("\t%s version %s using %s\n", progname, PACKAGE_VERSION, pcap_lib_version());
+
+}
 
 int main(int argc, char *argv[])
 {

@@ -8,15 +8,6 @@
 static int count_packets;
 static int print_hex;
 
-static void usage(const char *progname)
-{
-    printf("Usage: %s [-hcp] file1.pcap file2.pcap ...\n", progname);
-    puts("\t-c count the number of packets");
-    puts("\t-p print a hex dump of each packet");
-    puts("\t-h this help");
-    printf("\t%s version %s using %s\n", progname, PACKAGE_VERSION, pcap_lib_version());
-}
-
 static void dump_hex(const unsigned char *data, u_int len)
 {
     u_int i;
@@ -70,6 +61,15 @@ static void pcap_info(const char *file)
     }
 
     pcap_close(pcap);
+}
+
+static void usage(const char *progname)
+{
+    printf("Usage: %s [-hcp] file1.pcap file2.pcap ...\n", progname);
+    puts("\t-c count the number of packets");
+    puts("\t-p print a hex dump of each packet");
+    puts("\t-h this help");
+    printf("\t%s version %s using %s\n", progname, PACKAGE_VERSION, pcap_lib_version());
 }
 
 int main(int argc, char *argv[])
