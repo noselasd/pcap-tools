@@ -273,7 +273,7 @@ static void show_header(int fd, int other_endian)
         uint32_t val;
 
         val = pcap_headers[i].get_func(fd, offset, other_endian);
-        printf("%-15s: %" PRIu32 "\n",pcap_headers[i].field_name, val);
+        printf("%-15s: %" PRIu32 " (0x%" PRIx32 ")\n",pcap_headers[i].field_name, val, val);
     }
 }
 
