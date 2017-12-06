@@ -13,6 +13,11 @@ pcap-dump: Prints out a hex dump of packets in pcap files
 pcap-changehdr: Change the file header fields of a .pcap file
                 Print out the file header fields of a .pcap file
 
+pcap-duplicate: Writes a new pcap file with each packet duplicated
+                the given amount of times, and for IPv4 packets, the
+                source and destination IP address can be changed for 
+                each duplicated packet.
+
 Building
 ---------
 Prerequisites:
