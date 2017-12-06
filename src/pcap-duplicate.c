@@ -1,27 +1,10 @@
 #include "../config.h"
 #include <pcap.h>
+#include <stdlib.h>
 #include <getopt.h>
 
-/* Small utility to show info and dump the hex content of 
- * pcap files */
+/* Small utility to duplicate packets in pcap files */
 
-static int count_packets;
-static int print_hex;
-
-static void dump_hex(const unsigned char *data, u_int len)
-{
-    u_int i;
-    for (i = 1; i <= len; i++) {
-        printf("%02X ", data[i - 1]);
-        if (i % 20 == 0)
-            putchar('\n');
-    }
-
-    if (i % 20 != 0)
-        putchar('\n');
-   putchar('\n');
-
-}
 
 static void pcap_duplicate(int n, const char *file, const char *out_file)
 {
@@ -56,7 +39,7 @@ static void pcap_duplicate(int n, const char *file, const char *out_file)
     while ((packet = pcap_next(in_pcap, &hdr)) != NULL) {
         int i;
         for (i = 0; i < n; i++) {
-            pcap_dump(dumper, &hdr, packet);
+            pcap_dump((u_char*)dumper, &hdr, packet);
         }
     }
 

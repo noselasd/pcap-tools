@@ -9,6 +9,6 @@ pcap_dump_LDADD = $(PCAP_LIBS)
 pcap_changehdr_SOURCES = pcap-changehdr.c
 pcap_changehdr_LDADD = $(PCAP_LIBS) 
 
-pcap_duplicate_SOURCES = pcap-dup.c
+pcap_duplicate_SOURCES = pcap-duplicate.c
 pcap_duplicate_LDADD = $(PCAP_LIBS) 
 

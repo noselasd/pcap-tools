@@ -35,3 +35,4 @@ pcap-*.tar.*
 tags
 src/pcap-changehdr
 src/pcap-dump
+src/pcap-duplicate
