@@ -66,11 +66,11 @@ static void pcap_duplicate(struct Options *opts)
         puts("Error calling pcap_open_dead())");
         return;
     }
-    dumper = pcap_dump_open(in_pcap, opts->out_file);
+    dumper = pcap_dump_open(out_pcap, opts->out_file);
     if (dumper == NULL) {
+        printf("Error opening output %s: %s\n", opts->out_file, pcap_geterr(out_pcap));
         pcap_close(in_pcap);
         pcap_close(out_pcap);
-        printf("Error opening %s: %s\n", opts->in_file, errbuf);
         return;
     }
 
