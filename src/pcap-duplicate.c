@@ -18,8 +18,10 @@ static void change_ethpacket(struct pcap_pkthdr *hdr, unsigned char *packet)
     int vlanlen = 0;
     int ip_start;
 
-    if (hdr->caplen <= 46)  //Pakken må være minimum Ethernet + evt. VLAN + IPv4 + UDP
+    if (hdr->caplen < 24) {  //at least ethernet/ip hdr
         return;
+    }
+
     if (packet[12] == 0x81 && packet[13] == 0) { //vlan
             vlanlen = 4;
     }
@@ -31,7 +33,9 @@ static void change_ethpacket(struct pcap_pkthdr *hdr, unsigned char *packet)
         return;
     }
 
-    //change the last 2 bytes in IP addr
+    if (hdr->caplen < ip_start + 20) {
+        return;
+    }
 
    uint32_t *ip_src = (uint32_t *)&packet[ip_start + 12];
    uint32_t *ip_dst = (uint32_t *)&packet[ip_start + 16];
