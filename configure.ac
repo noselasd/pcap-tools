@@ -1,6 +1,6 @@
 AC_INIT([pcap-tools],
-    0.0.1,
-	[noselasd@fiane.dyndns.org])
+    0.1.0,
+	[noselasd@fiane.mooo.com])
 
 AM_INIT_AUTOMAKE([foreign dist-bzip2 no-dist-gzip 1.6])
 #AC_CONFIG_TESTDIR(tests)
